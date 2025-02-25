@@ -1,5 +1,5 @@
 import React from "react";
-import TshirtImg from "./tshirt.svg";
+import s24Image from "./images/s24.jpeg";
 function Product() {
 	const amount = 500;
 	const currency = "INR";
@@ -26,10 +26,22 @@ function Product() {
 			description: "Test Transaction",
 			image: "https://example.com/your_logo",
 			order_id: order.id,
-			handler: function (response) {
-				alert(response.razorpay_payment_id);
-				alert(response.razorpay_order_id);
-				alert(response.razorpay_signature);
+			handler: async function (response) {
+				const body = {
+					...response,
+				};
+				const validateRes = await fetch(
+					"http://localhost:5000/order/validate",
+					{
+						method: "POST",
+						body: JSON.stringify(body),
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				const jsonRes = await validateRes.json();
+				console.log(jsonRes);
 			},
 			prefill: {
 				name: "Integrating the Razorpayin React",
@@ -58,9 +70,10 @@ function Product() {
 	};
 	return (
 		<div className="product">
-			<h2>Tshirt</h2>
-			<p>SOLID BLUE COTTON SHIRT</p>
-			<img src={TshirtImg} alt="" />
+			<h2>Samsung S24 ultra</h2>
+			<p>256GB, Phantom Black - 200MP Camera, Snapdragon 8 Gen 2</p>
+			<p>Amount :₹125000</p>
+			<img src={s24Image} alt="" />
 			<br />
 			<button onClick={paymentHandler}>Pay</button>
 		</div>
